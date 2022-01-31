@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Button, Text, TextInput, View, FlatList } from 'react-native';
 
 export default function App() {
   const [first, setFirst] = useState('');
   const [second, setSecond] = useState('');
   const [result, setResult] = useState('0');
+  const [history, setHistory] = useState([]);
 
   const sum = () => {
     if (first == '' || second == '') {
       setResult('invalid input numbers')
     } else {
-      setResult(parseFloat(first) + parseFloat(second))
+      const sum = parseFloat(first) + parseFloat(second) 
+      setResult(sum)
+      const calculation = `${first} + ${second} = ${sum}`
+      setHistory([...history, {key: calculation}])
     }
   };
 
@@ -18,7 +22,10 @@ export default function App() {
     if (first == '' || second == '') {
       setResult('invalid input numbers')
     } else {
-      setResult(parseFloat(first) - parseFloat(second))
+      const difference = parseFloat(first) - parseFloat(second)
+      setResult(difference)
+      const calculation = `${first} - ${second} = ${difference}`
+      setHistory([...history, {key: calculation}])
     }
   }
 
@@ -34,7 +41,7 @@ export default function App() {
         onChangeText={second => setSecond(second)} value={second} keyboardType='number-pad'
         />
       </View>
-      <View style={{flex: 2, backgroundColor: '#e5e4e2', flexDirection: 'row',
+      <View style={{flex: 0.1, backgroundColor: '#e5e4e2', flexDirection: 'row',
     alignItems: 'flex-start', justifyContent: 'space-evenly', padding: 10}}>
         <View style={{width: 40, height: 30}}>
           <Button title='+' color="#a6c6cb"
@@ -44,6 +51,14 @@ export default function App() {
           <Button title='-' color="#a6c6cb"
           onPress={subtract}/>
           </View>
+      </View>
+      <View style={{flex: 1, backgroundColor: '#e5e4e2', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'flex-start', padding: 10}}>
+      <Text>History</Text>
+      <FlatList
+      data={history}
+      renderItem={({item}) => <Text>{item.key}</Text>}
+      keyExtractor={(item, index) => index.toString()} />
       </View>
     </View>
   );
